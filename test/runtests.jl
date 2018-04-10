@@ -22,8 +22,18 @@ using Base.Test
 # m = Memory{ Int8, Int8 }( zeros( Int8, 10 ) )
 # m.values
 
-
-
 Register{ UInt8 }( 1 )
 
-Register{ UInt8 }()
+r = Register{ UInt8 }()
+
+get( r )
+
+set( r, UInt8(1) )
+
+get( r )
+
+m = Memory{ UInt8, UInt8 }( 10 )
+
+getAddr( m )
+
+read( m )

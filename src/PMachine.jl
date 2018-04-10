@@ -131,25 +131,31 @@ function exe( m::Machine, c::Vector )
 end
 
 
-export Memory, get, set
+export Register, get, set
+import Base.get
 
-struct Memory{ Val, Add <: Integer }
-    values   :: Vector{ Val }
-end
-Memory{ Val, Add }( size :: Add ) where Add where Val = Memory{ Val, Add }( zeros( Val, size ) )
-# Memory{ Val, Add }() = Memory{ Val, Add }( [ 0, 0 ] )
-
-# get( m :: Memory{ Val, Add }, addr :: Add )             = m.values[ addr ]
-# set( m :: Memory{ Val, Add }, addr :: Add, val :: Val ) = m.values[ addr ] = val
-
-
-export Register
-
-struct Register{ Val <: Integer } <: Integer
+mutable struct Register{ Val <: Integer } <: Integer
     value  :: Val
 end
-Register{T}() where T = Register{T}( 0 )
-Register( val :: T ) where T = Register{T}( val )
+Register{T}()           where T = Register{T}( 0 )
+Register( val :: T )    where T = Register{T}( val )
 
+get( r :: Register{T} )         where T = r.value
+set( r :: Register{T}, v :: T ) where T = r.value = v
+
+export Memory, getAddr, setAddr, read, write
+
+struct Memory{ Val, Add <: Integer }
+    values  :: Vector{ Val }
+    addr    :: Register{ Add }
+end
+Memory{ V, A }( size :: Integer ) where A where V = Memory{ V, A }( zeros( V, size ), Register{ A }() )
+# Memory{ V, A }()                  where A where V = Memory{ V, A }( zeros( V, size ), Register{ A }() )
+
+getAddr( m :: Memory{ V, A } )          where A where V = get( m.addr )
+setAddr( m :: Memory{ V, A }, a :: A )  where A where V = set( m.addr, a )
+
+read(  m :: Memory{ V, A } )                where A where V = m.values[ m.addr ]
+write( m :: Memory{ V, A }, value :: V )    where A where V = m.values[ m.addr ] = value
 
 end
