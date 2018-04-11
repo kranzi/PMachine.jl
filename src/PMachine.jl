@@ -155,7 +155,7 @@ Memory{ V, A }( size :: Integer ) where A where V = Memory{ V, A }( zeros( V, si
 getAddr( m :: Memory{ V, A } )          where A where V = get( m.addr )
 setAddr( m :: Memory{ V, A }, a :: A )  where A where V = set( m.addr, a )
 
-read(  m :: Memory{ V, A } )                where A where V = m.values[ m.addr ]
-write( m :: Memory{ V, A }, value :: V )    where A where V = m.values[ m.addr ] = value
+read(  m :: Memory{ V, A } )                where A where V = m.values[ getAddr( m ) + 1 ]
+write( m :: Memory{ V, A }, value :: V )    where A where V = m.values[ getAddr( m ) + 1 ] = value
 
 end
