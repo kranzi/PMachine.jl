@@ -1,39 +1,35 @@
 using PMachine
 using Base.Test
 
-# write your own tests here
-# @test 1 == 2
-# m = Machine()
-# # load( m, [ :ldc, :i, 1, :ldc, :i, 1, :add, :i] )
-# # exe( m )
-# m
-# exe( m, [ :ldc, :i, 1, :halt ] )
-# exe( m, [ :ldc, :i, 1, :halt ] )
-# exe( m, [ :add, :i, :halt ] )
-#
-# # exe( m, [ :ldc, :i, 1, :ldc, :i, 2, :add, :i, :halt ] )
-# m = Memory{ Int8, Int8 }( Int8(10) )
-#
-# zeros( Int8, 10 )
-#
-# m = Memory{ Int8, Int8 }
-# m.values
-#
-# m = Memory{ Int8, Int8 }( zeros( Int8, 10 ) )
-# m.values
+r1 = Register{ UInt8 }( 1 )
 
-Register{ UInt8 }( 1 )
+r2 = Register{ UInt8 }()
 
-r = Register{ UInt8 }()
+@test ( typeof( r1 ) == typeof( r2 ) )
 
-get( r )
+@test get( r2 ) == 0x00
 
-set( r, UInt8(1) )
+set( r2, UInt8( 1 ) )
 
-get( r )
+@test get( r1 ) == get( r2 )
 
 m = Memory{ UInt8, UInt8 }( 10 )
 
-getAddr( m )
+@test getAddr( m ) == 0
 
-read( m )
+@test PMachine.read( m ) == 0
+
+PMachine.write( m, UInt8(99) )
+
+@test PMachine.read( m ) == 99
+
+setAddr( m, UInt8( 2 ) )
+PMachine.reset( m )
+
+@test PMachine.read( m ) == 0
+@test getAddr( m ) == 0
+
+ma = Machine()
+
+@test codesize( ma ) == 100
+@test storesize( ma ) == 100
